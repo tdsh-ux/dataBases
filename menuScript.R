@@ -41,27 +41,19 @@ unique(menuTable[["venue"]])
 
 
 # e 
+# event é mais específico; por exemplo, reunião anula do grupo tal; 
+# banquete do aniversário de alguém. 
 menuEvent <- menuTable 
 menuEvent <- menuEvent %>% 
 	mutate(event = toupper(event)) %>% 
 	mutate(event = gsub(x = event, pattern = "(.*MEETING.*)|(.*SYMPOSIUM.*)|(.*CELEBRATION.*)|(*.RECEPTION.*)", 
-			    replacement = "MEETING")) %>%  
-	mutate(event = gsub(x = event, pattern = ".*DIN{0,2}E{0,1}R?.*", 
-			    replacement = "DINNER")) %>% 
-	mutate(event = gsub(x = event, pattern = ".*LUNCH.*", 
-			    replacement = "LUNCH")) %>% 
-	mutate(event = gsub(x = event, pattern = "(.*ANNIVERSARY.*)|(.*BIRTHDAY.*)", 
-			    replacement = "ANNIVERSARY")) %>% 
-	mutate(event = gsub(x = event, pattern = ".*BREAKFAST.*", 
-			    replacement = "BREAKFAST")) %>% 
-	mutate(event = gsub(x = event, pattern = ".*BANQUET.*", 
-			    replacement = "BANQUET")) %>% 
-	mutate(event = gsub(x = event, pattern = ".*DESSERT.*", 
-			    replacement = "DESSERT")) %>% 
+			    replacement = "MEETING")) %>% 
 	mutate(event = gsub(x = event, pattern = "(.*BEVERAGE.*)|(.*CHAMPAGNE.*)|(.*TEA.*)", 
 			    replacement = "DRINKS")) %>% 
 	mutate(event = gsub(x = event, pattern = "^$", 
 			       replacement = "NULL")) %>% 
+	mutate(event = gsub(x = event, pattern = "\\?", 
+			    replacement = "")) %>% 
 	mutate(event = gsub(x = event, pattern = "^\\[?\\?\\]?$", 
 			       replacement = "NULL")) %>% 
 	mutate(event = gsub(x = event, pattern = "\\[|\\]|\\(|\\)|([\\])|;", 
@@ -69,12 +61,11 @@ menuEvent <- menuEvent %>%
 	mutate(event = gsub(x = event, pattern = "\"|\""  , 
 			    replacement = "")) 
 
-unique(menuEvent[["event"]]) 
-
+unique(menuEvent[["event"]])
 
 # o 
+# occasion é mais amplo; por exemplo, aniversários, encontros, jantares em geral. 
 menuO <- menuEvent 
-
 menuO <- menuO %>% 
 	mutate(occasion = toupper(occasion)) %>% 
 	mutate(occasion = gsub(x = occasion, pattern = ";", 
@@ -116,6 +107,61 @@ menuO <- menuO %>%
 	mutate(occasion = gsub(x = occasion, pattern = "^\\[?\\?\\]?$", 
 			       replacement = "NULL")) %>% 
 	mutate(occasion = gsub(x = occasion, pattern = "\\[|\\]|\\(|\\)", 
+			       replacement = "")) %>% 
+	mutate(occasion = gsub(x = occasion, pattern = "\\?", 
 			       replacement = "")) 
 
 unique(menuO[["occasion"]]) 
+
+cleanData <- function(dataVector, regularExpression, replacementString) {
+	gsub(x = dataVector, pattern = regularExpression, replacement = replacementString) 
+} 
+
+
+
+# place 
+
+menuP <- menuO 
+menuP <- menuP %>% 
+	mutate(place = map(place, ~cleanData(.x, "\\(|\\)|\\[|\\]", ""))) %>% 
+	mutate(place = map(place, ~cleanData(.x, ";", ""))) %>% 
+	mutate(place = map(place, ~cleanData(.x, "-", ","))) %>% 
+	mutate(place = map(place, ~cleanData(.x, "NEW YORK, ", ""))) %>% 
+	mutate(place = map(place, ~cleanData(.x, "\\?", ""))) %>% 
+	mutate(place = map(place, ~cleanData(.x, "N\\.Y\\.", "NY"))) %>% 
+	mutate(place = map(place, ~cleanData(.x, "\"|\"", ""))) %>% 
+	mutate(place = map(place, ~cleanData(.x, "NEW YORK[ ]$", "NY"))) %>% 
+	mutate(place = map(place, ~cleanData(.x, "R\\.I\\.", "RI"))) %>% 
+	mutate(place = map(place, ~cleanData(.x, "NEW YORK CITY", "NY"))) %>% 
+	mutate(place = map(place, ~cleanData(.x, "\\.NY", ", NY"))) %>% 
+	mutate(place = map(place, ~cleanData(.x, ",NY", "NY"))) %>% 
+	mutate(place = map(place, ~cleanData(.x, "NYC", "NY"))) %>% 
+	mutate(place = map(place, ~cleanData(.x, "COLO\\.", "CO"))) %>% 
+	mutate(place = map(place, ~cleanData(.x, "[^,] NY", ", NY"))) %>% 
+	mutate(place = map(place, ~cleanData(.x, "P\\.I\\.", "PI"))) %>% 
+	mutate(place = map(place, ~cleanData(.x, "D\\.C\\.", "DC"))) %>% 
+	mutate(place = map(place, ~cleanData(.x, "N\\.C\\.", "NC"))) %>% 
+	mutate(place = map(place, ~cleanData(.x, "[^,] OH", ", OH"))) %>% 
+	mutate(place = map(place, ~cleanData(.x, "^NY$", "NULL, NY"))) %>% 
+	mutate(place = map(place, ~cleanData(.x, "[^,] VA", ", VA"))) %>% 
+	mutate(place = map(place, ~cleanData(.x, "[^,] IL", ", IL"))) %>% 
+	mutate(place = map(place, ~cleanData(.x, "[^,] PA", ", PA"))) %>% 
+	mutate(place = map(place, ~cleanData(.x, ".*EN ROUTE.*", "NULL"))) 
+
+
+unique(menuP[["place"]]) 
+
+
+# s 
+
+menuS <- menuP 
+
+menuS <- menuS %>% 
+	mutate(sponsor = toupper(sponsor)) %>% 
+	mutate(sponsor = map(sponsor, ~cleanData(.x, "RED ST[AE]R LINE.*", 
+						 "RED STAR LINE - ANTWERPEN"))) %>% 
+	mutate(sponsor = map(sponsor, ~cleanData(.x, "AMERICA[LN]", "AMERICAN"))) %>% 
+	mutate(sponsor = map(sponsor, ~cleanData(.x, "^\\(|\\)$|\\(\\?\\)|\\?|;", "")))  
+unique(menuS[["sponsor"]]) 
+
+
