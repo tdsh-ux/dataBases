@@ -164,4 +164,6 @@ menuS <- menuS %>%
 	mutate(sponsor = map(sponsor, ~cleanData(.x, "^\\(|\\)$|\\(\\?\\)|\\?|;", "")))  
 unique(menuS[["sponsor"]]) 
 
+menuS <- apply(menuS, 2, as.character) 
+write.table(menuS, file = paste0(getwd(), "/cleanedData/menuClean.csv", row.names = FALSE))  
 
