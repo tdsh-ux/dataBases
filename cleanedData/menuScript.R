@@ -177,7 +177,8 @@ menuS <- menuS %>%
 	mutate(sponsor = map(sponsor, ~cleanData(.x, "AMERICA[LN]", "AMERICAN"))) %>% 
 	mutate(sponsor = map(sponsor, ~cleanData(.x, "^\\(|\\)$|\\(\\?\\)|\\?|;|\\[|\\]", ""))) %>% 
 	mutate(sponsor = map(sponsor, ~cleanData(.x, "RESTAURANT NAME AND/OR LOCATION NOT GIVEN", ""))) %>% 
-	mutate(sponsor = map(sponsor, ~cleanData(.x, "^$", "NULL"))) 
+	mutate(sponsor = map(sponsor, ~cleanData(.x, "^$", "NULL"))) %>% 
+	mutate(sponsor = map(sponsor, ~cleanData(.x, "\"|\"", ""))) 
 menuS[["sponsor"]] <- unlist(menuS[["sponsor"]]) 
 
 
@@ -214,7 +215,7 @@ menuD %>%
 	arrange(desc(n)) 
 
 menuClean <- menuD %>% 
-	select(id, name, event, sponsor, currency, venue, dish_count, page_count) 
+	select(id, name, date, event, sponsor, currency, venue, dish_count, page_count) 
 
 
 
@@ -246,12 +247,17 @@ eventId <- normalizeTable(menuClean, "event") %>% rename(eventId = id)
 sponsorId <- normalizeTable(menuClean, "sponsor") %>% rename(sponsorId = id) 
 currencyId <- normalizeTable(menuClean, "currency") %>% rename(currencyId = id)  
 
+
 menuClean <- menuClean %>% 
 	inner_join(venueId, by = c("venue" = "field")) %>% 
 	inner_join(eventId, by = c("event" = "field")) %>% 
 	inner_join(sponsorId, by = c("sponsor" = "field")) %>% 
 	inner_join(currencyId, by = c("currency" = "field")) %>% 
 	select(!c(venue, event, sponsor, currency)) 
+
+
+
+
 write.table(x = menuClean, file = paste0(getwd(), "/cleanedData/menuClean.csv"), row.names = FALSE) 
 write.table(x = venueId, file = paste0(getwd(), "/cleanedData/venueId.csv"), row.names = FALSE) 
 write.table(x = eventId, file = paste0(getwd(), "/cleanedData/eventId.csv"), row.names = FALSE) 
