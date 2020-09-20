@@ -79,46 +79,23 @@ menuO <- menuO %>%
 	mutate(occasion = toupper(occasion)) %>% 
 	mutate(occasion = gsub(x = occasion, pattern = ";", 
 			       replacement = "")) %>% 
-	mutate(occasion = gsub(x = occasion, pattern = ".{0,4}[O0]T?HE?R?.*", 
-			       replacement = "OTHER")) %>% 
-	mutate(occasion = gsub(x = occasion, pattern = "(.*AM?[NV]?[NV]I.*)|(BIRTHDAY)", 
+	mutate(occasion = gsub(x = occasion, pattern = ".*ANN.*|ANIV.*", 
 			       replacement = "ANNIVERSARY")) %>% 
-	mutate(occasion = gsub(x = occasion, pattern = ".*GRADUTATION.*", 
-			       replacement = "GRADUATION")) %>% 
-	mutate(occasion = gsub(x = occasion, pattern = "(.*AM?NNU?A?L?.*)", 
-			       replacement = "ANNUAL MEETING")) %>% 
-	mutate(occasion = gsub(x = occasion, pattern = ".*WEDDING.*", 
-			       replacement = "WEDDING")) %>% 
-	mutate(occasion = gsub(x = occasion, pattern = "(.*REL.*)|(ST..*)", 
+	mutate(occasion = gsub(x = occasion, ".*RELIG.*", 
 			       replacement = "RELIGIOUS HOLIDAY")) %>% 
-	mutate(occasion = gsub(x = occasion, pattern = ".*HOLI.*", 
-			       replacement = "ANOTHER HOLIDAY")) %>%  
-	mutate(occasion = gsub(x = occasion, pattern = ".*SOC.*", 
-			       replacement = "SOCIAL")) %>% 
-	mutate(occasion = gsub(x = occasion, pattern = ".*DINNER.*", 
-			       replacement = "DAILY DINNER")) %>%  
-	mutate(occasion = gsub(x = occasion, pattern = ".*LUNCH.*", 
-			       replacement = "DAILY LUNCH")) %>% 
-	mutate(occasion = gsub(x = occasion, pattern = ".*DAILY.*", 
+	mutate(occasion = gsub(x = occasion, pattern = ".*PATRIOTIC.*", 
+			       replacement = "PATRIOTIC HOLIDAY")) %>% 
+	mutate(occasion = gsub(x = occasion, pattern = ".*SECULAR.*", 
+			       replacement = "SECULAR HOLIDAY")) %>% 
+	mutate(occasion = gsub(x = occasion, pattern = ".*ETHNIC.*", 
+			       replacement = "ETHNIC HOLIDAY")) %>% 
+	mutate(occasion = gsub(x = occasion, pattern = ".*DAILY.*|^DINNER$", 
 			       replacement = "DAILY")) %>% 
-	mutate(occasion = gsub(x = occasion, pattern = ".*BANQUET.*", 
-			       replacement = "BANQUET")) %>% 
-	mutate(occasion = gsub(x = occasion, pattern = ".*C[O0I]*MP?.*", 
-			       replacement = "CMPLUMENTARY")) %>% 
-	mutate(occasion = gsub(x = occasion, pattern = "(.*BREAKF.*)|(.*CAFE.*)", 
-			       replacement = "BREAKFAST")) %>% 
-	mutate(occasion = gsub(x = occasion, pattern = ".*FUNERAL.*", 
-			       replacement = "FUNERAL")) %>% 
-	mutate(occasion = gsub(x = occasion, pattern = ".*REUNION.*", 
-			       replacement = "REUNION")) %>% 
-	mutate(occasion = gsub(x = occasion, pattern = "^$", 
-			       replacement = "NULL")) %>% 
-	mutate(occasion = gsub(x = occasion, pattern = "^\\[?\\?\\]?$", 
-			       replacement = "NULL")) %>% 
-	mutate(occasion = gsub(x = occasion, pattern = "\\[|\\]|\\(|\\)", 
-			       replacement = "")) %>% 
-	mutate(occasion = gsub(x = occasion, pattern = "\\?", 
-			       replacement = "")) 
+	mutate(occasion = gsub(x = occasion, pattern = "\\(?[O0]T?HE.*", 
+			       replacement = "OTHER")) %>% 
+	mutate(occasion = gsub(x = occasion, pattern = "^$|.*\\?.*", 
+			       replacement = "NULL")) 
+
 
 unique(menuO[["occasion"]]) 
 
