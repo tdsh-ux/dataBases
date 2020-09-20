@@ -215,5 +215,42 @@ menuD %>%
 
 menuClean <- menuD %>% 
 	select(id, name, event, sponsor, currency, venue, dish_count, page_count) 
-write.table(x = menuClean, file = paste0(getwd(), "/cleanedData/menuClean.csv"), row.names = FALSE)  
 
+
+
+normalizeTable <- function(dataframe, field) { 
+	
+	library(rlang) 
+	
+	x <- unique(dataframe[[field]]) 
+	idKeys <- list() 
+	id <- 1 
+	for(index in seq(1, length(x))) { 
+		if(!x[index] %in% idKeys) {
+			idKeys[[id]] <- x[index] 
+			id <- id + 1 
+		} 
+	} 
+	
+	fieldTable <- data.frame(id = seq(1, length(x)), 
+				 field = unlist(map(seq(1, length(x)), ~idKeys[[.x]]))) 
+	
+	
+	
+	return(fieldTable)    
+	
+} 
+
+venueId <- normalizeTable(menuClean, "venue") %>% rename(venueId = id) 
+eventId <- normalizeTable(menuClean, "event") %>% rename(eventId = id)  
+sponsorId <- normalizeTable(menuClean, "sponsor") %>% rename(sponsorId = id) 
+currencyId <- normalizeTable(menuClean, "currency") %>% rename(currencyId = id)  
+
+menuClean <- menuClean %>% 
+	inner_join(venueId, by = c("venue" = "field")) %>% 
+	inner_join(eventId, by = c("event" = "field")) %>% 
+	inner_join(sponsorId, by = c("sponsor" = "field")) %>% 
+	inner_join(currencyId, by = c("currency" = "field")) %>% 
+	select(!c(venue, event, sponsor, currency)) 
+
+write.table(x = menuClean, file = paste0(getwd(), "/cleanedData/menuClean.csv"), row.names = FALSE)  
