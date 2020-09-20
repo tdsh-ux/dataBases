@@ -46,8 +46,8 @@ menuTable %>%
 	group_by(venue) %>% 
 	count %>% 
 	arrange(desc(n)) 
-
 # e 
+
 # event é mais específico; por exemplo, reunião anula do grupo tal; 
 # banquete do aniversário de alguém. 
 menuEvent <- menuTable 
