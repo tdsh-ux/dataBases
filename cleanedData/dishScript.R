@@ -17,11 +17,13 @@ dishClean <- dish %>%
 		times_appeared 
 	)) %>% 
 	select(!description) %>% 
-	mutate(name = gsub(x = name, pattern = "\\[|\\]|^[\\* ]*\\(|\\)[\\* ]*$|\\?", 
+	mutate(name = gsub(x = name, pattern = "\\[|\\]|^[\\* ]*\\(&\\)$|[\\* ]*$|\\?", 
 			   replacement = "")) %>% 
 	mutate(name = gsub(x = name, pattern = "\"|\"", 
 			   replacement = "")) %>% 
 	mutate(name = gsub(x = name, pattern = "^' +|^ +",  
+			   replacement = "")) %>% 
+	mutate(name = gsub(x = name, pattern = "^[\\*]+|^#+", 
 			   replacement = "")) 
 
 cleanDish <- dishClean %>% 
@@ -37,7 +39,7 @@ cleanDish <- dishClean %>%
 			   replacement = "NULL")) %>% 
 	mutate(first_appeared = ifelse(first_appeared == Inf, "NULL", first_appeared)) %>% 
 	mutate(last_appeared = ifelse(last_appeared == -Inf, "NULL", last_appeared)) %>% 
-	mutate(lowest_price = ifelse(lowest_price == Inf, "NULL", lowest_price)) %>% 
+	mutate(lowest_price = ifelse(lowest_price == Inf, "NULL", lowest_price)) %>%  
 	mutate(highest_price = ifelse(highest_price == -Inf, "NULL", highest_price)) 
 
 
