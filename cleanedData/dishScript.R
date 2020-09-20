@@ -17,7 +17,7 @@ dishClean <- dish %>%
 		times_appeared 
 	)) %>% 
 	select(!description) %>% 
-	mutate(name = gsub(x = name, pattern = "\\[|\\]|^ *\\(|\\) *$|\\?", 
+	mutate(name = gsub(x = name, pattern = "\\[|\\]|^[\\* ]*\\(|\\)[\\* ]*$|\\?", 
 			   replacement = "")) %>% 
 	mutate(name = gsub(x = name, pattern = "\"|\"", 
 			   replacement = "")) %>% 
