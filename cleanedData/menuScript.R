@@ -206,8 +206,6 @@ menuN <- menuN %>%
 
 # D 
 menuD <- menuN 
-menuD <- menuD %>% 
-	mutate(date = as.Date(date)) 
 
 menuD %>% 
 	group_by(date) %>% 
@@ -245,7 +243,8 @@ normalizeTable <- function(dataframe, field) {
 venueId <- normalizeTable(menuClean, "venue") %>% rename(venueId = id) 
 eventId <- normalizeTable(menuClean, "event") %>% rename(eventId = id)  
 sponsorId <- normalizeTable(menuClean, "sponsor") %>% rename(sponsorId = id) 
-currencyId <- normalizeTable(menuClean, "currency") %>% rename(currencyId = id)  
+currencyId <- normalizeTable(menuClean, "currency") %>% rename(currencyId = id) 
+dateId <- normalizeTable(menuClean, "date") %>% rename(dateId = id) %>% arrange(field) 
 
 
 menuClean <- menuClean %>% 
@@ -253,7 +252,8 @@ menuClean <- menuClean %>%
 	inner_join(eventId, by = c("event" = "field")) %>% 
 	inner_join(sponsorId, by = c("sponsor" = "field")) %>% 
 	inner_join(currencyId, by = c("currency" = "field")) %>% 
-	select(!c(venue, event, sponsor, currency)) 
+	inner_join(dateId, by = c("date" = "field")) %>% 
+	select(!c(venue, event, sponsor, currency, date)) 
 
 
 
@@ -263,3 +263,4 @@ write.table(x = venueId, file = paste0(getwd(), "/cleanedData/venueId.csv"), row
 write.table(x = eventId, file = paste0(getwd(), "/cleanedData/eventId.csv"), row.names = FALSE) 
 write.table(x = sponsorId, file = paste0(getwd(), "/cleanedData/sponsorId.csv"), row.names = FALSE) 
 write.table(x = currencyId, file = paste0(getwd(), "/cleanedData/currencyId.csv"), row.names = FALSE) 
+write.table(x = dateId, file = paste0(getwd(), "/cleanedData/date.csv"), row.names = FALSE) 

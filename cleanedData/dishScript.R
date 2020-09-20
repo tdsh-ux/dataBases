@@ -17,16 +17,27 @@ dishClean <- dish %>%
 		times_appeared 
 	)) %>% 
 	select(!description) %>% 
-	mutate(name = gsub(x = name, pattern = "\\[|\\]|^[\\* ]*\\(&\\)$|[\\* ]*$|\\?", 
+	mutate(name = gsub(x = name, pattern = "\\[|\\]|^[\\* ]*|^\\(\\)$|[\\* ]*$|\\?", 
 			   replacement = "")) %>% 
 	mutate(name = gsub(x = name, pattern = "\"|\"", 
 			   replacement = "")) %>% 
 	mutate(name = gsub(x = name, pattern = "^' +|^ +",  
 			   replacement = "")) %>% 
 	mutate(name = gsub(x = name, pattern = "^[\\*]+|^#+", 
+			   replacement = "")) %>%   
+	mutate(name = gsub(x = name, pattern = "^[0-9]+ ?-[0-9 ]?", 
+			   replacement = "")) %>% 
+	mutate(name = gsub(x = name, pattern = "\\$[0-9]\\.[0-9][0-9]", 
+			   replacement = "")) %>% 
+	mutate(name = gsub(x = name, pattern = "\\([0-9]+\\)|!!", 
+			   replacement = "")) %>% 
+	mutate(name = gsub(x = name, pattern = "^-*|^->|^[ *]|\\.+", 
+			   replacement = "")) %>% 
+	mutate(name = gsub(x = name, pattern = "^ ", 
 			   replacement = "")) 
 
 cleanDish <- dishClean %>% 
+	filter(nchar(name) <= 32) %>% 
 	group_by(name) %>% 
 	summarise(id = min(id), 
 		  menus_appeared = sum(menus_appeared, na.rm = TRUE), 
