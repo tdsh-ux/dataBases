@@ -4,10 +4,11 @@ menu <- read.csv(paste0(getwd(), "/data/menu.csv"))
 # venue 
 menuTable <- menu %>% select(!notes) 
 menuTable <- menuTable %>% 
+	mutate(venue = toupper(venue)) %>% 
 	mutate(venue = gsub(x = venue, pattern = ";", replacement = "")) %>% 
 	mutate(venue = gsub(x = venue, pattern = ".*(SOC).*", 
 			    replacement = "SOCIAL")) %>% 
-	mutate(venue = gsub(x = venue, pattern = ".*OTHER.*", 
+	mutate(venue = gsub(x = venue, pattern = ".*[OP]THER.*", 
 			    replacement = "OTHER")) %>% 
 	mutate(venue = gsub(x = venue, pattern = ".*(EDU[CS]).*", 
 			    replacement = "EDUCATIONAL")) %>% 
@@ -34,11 +35,17 @@ menuTable <- menuTable %>%
 	mutate(venue = gsub(venue, pattern = ".*PRI[VC]ATE.*", 
 			    replacement = "PRIVATE")) %>% 
 	mutate(venue = gsub(venue, pattern = "HOTEL.*", 
-			    replacement = "HOTEL")) 
+			    replacement = "HOTEL")) %>% 
+	mutate(venue = gsub(x = venue, pattern = "\\[?\\?\\]?", 
+			    replacement = "NULL")) %>% 
+	mutate(venue = gsub(x = venue, pattern = "^$", replacement = "NULL")) 
 
 unique(menuTable[["venue"]]) 
 
-
+menuTable %>% 
+	group_by(venue) %>% 
+	count %>% 
+	arrange(desc(n)) 
 
 # e 
 # event é mais específico; por exemplo, reunião anula do grupo tal; 
@@ -48,8 +55,6 @@ menuEvent <- menuEvent %>%
 	mutate(event = toupper(event)) %>% 
 	mutate(event = gsub(x = event, pattern = "(.*MEETING.*)|(.*SYMPOSIUM.*)|(.*CELEBRATION.*)|(*.RECEPTION.*)", 
 			    replacement = "MEETING")) %>% 
-	mutate(event = gsub(x = event, pattern = "(.*BEVERAGE.*)|(.*CHAMPAGNE.*)|(.*TEA.*)", 
-			    replacement = "DRINKS")) %>% 
 	mutate(event = gsub(x = event, pattern = "^$", 
 			       replacement = "NULL")) %>% 
 	mutate(event = gsub(x = event, pattern = "\\?", 
@@ -63,6 +68,10 @@ menuEvent <- menuEvent %>%
 
 unique(menuEvent[["event"]])
 
+menuEvent %>% 
+	group_by(event) %>% 
+	count %>% 
+	arrange(desc(n)) 
 # o 
 # occasion é mais amplo; por exemplo, aniversários, encontros, jantares em geral. 
 menuO <- menuEvent 
@@ -113,6 +122,11 @@ menuO <- menuO %>%
 
 unique(menuO[["occasion"]]) 
 
+menuO %>% 
+	group_by(occasion) %>% 
+	count %>% 
+	arrange(desc(n)) 
+
 cleanData <- function(dataVector, regularExpression, replacementString) {
 	gsub(x = dataVector, pattern = regularExpression, replacement = replacementString) 
 } 
@@ -161,9 +175,45 @@ menuS <- menuS %>%
 	mutate(sponsor = map(sponsor, ~cleanData(.x, "RED ST[AE]R LINE.*", 
 						 "RED STAR LINE - ANTWERPEN"))) %>% 
 	mutate(sponsor = map(sponsor, ~cleanData(.x, "AMERICA[LN]", "AMERICAN"))) %>% 
-	mutate(sponsor = map(sponsor, ~cleanData(.x, "^\\(|\\)$|\\(\\?\\)|\\?|;", "")))  
-unique(menuS[["sponsor"]]) 
+	mutate(sponsor = map(sponsor, ~cleanData(.x, "^\\(|\\)$|\\(\\?\\)|\\?|;|\\[|\\]", ""))) %>% 
+	mutate(sponsor = map(sponsor, ~cleanData(.x, "RESTAURANT NAME AND/OR LOCATION NOT GIVEN", ""))) %>% 
+	mutate(sponsor = map(sponsor, ~cleanData(.x, "^$", "NULL"))) 
+menuS[["sponsor"]] <- unlist(menuS[["sponsor"]]) 
 
-menuS <- apply(menuS, 2, as.character) 
-write.table(menuS, file = paste0(getwd(), "/cleanedData/menuClean.csv", row.names = FALSE))  
+
+menuS %>% 
+	group_by(name) %>% 
+	count %>% 
+	arrange(desc(n)) 
+
+
+
+
+# N 
+menuN <- menuS 
+menuN <- menuN %>% 
+	mutate(name = toupper(name)) %>% 
+	mutate(name = gsub(x = name, pattern = "^$", 
+			   replacement = "NULL")) %>% 
+	mutate(name = gsub(x = name, pattern = "\\[|\\]", 
+			   replacement = "")) %>% 
+	mutate(name = gsub(x = name, pattern = "RESTAURANT NAME AND/OR LOCATION NOT GIVEN", 
+			   replacement = "NULL")) %>% 
+	mutate(name = gsub(x = name, pattern = "\"|\"", 
+			   replacement = "")) 
+
+
+# D 
+menuD <- menuN 
+menuD <- menuD %>% 
+	mutate(date = as.Date(date)) 
+
+menuD %>% 
+	group_by(date) %>% 
+	count %>% 
+	arrange(desc(n)) 
+
+menuClean <- menuD %>% 
+	select(id, name, event, sponsor, currency, venue, dish_count, page_count) 
+write.table(x = menuClean, file = paste0(getwd(), "/cleanedData/menuClean.csv"), row.names = FALSE)  
 

@@ -11,11 +11,12 @@ dishClean <- dish %>%
 		NA, 
 		first_appeared 
 	), 
-	times_appeared = ifelse(
+	times_appeared = ifelse( 
 		times_appeared <= 0, 
 		NA, 
 		times_appeared 
-	)) 
+	)) %>% 
+	select(!description) 
 
 
 
