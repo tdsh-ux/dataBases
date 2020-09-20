@@ -252,7 +252,6 @@ menuClean <- menuClean %>%
 	inner_join(sponsorId, by = c("sponsor" = "field")) %>% 
 	inner_join(currencyId, by = c("currency" = "field")) %>% 
 	select(!c(venue, event, sponsor, currency)) 
-
 write.table(x = menuClean, file = paste0(getwd(), "/cleanedData/menuClean.csv"), row.names = FALSE) 
 write.table(x = venueId, file = paste0(getwd(), "/cleanedData/venueId.csv"), row.names = FALSE) 
 write.table(x = eventId, file = paste0(getwd(), "/cleanedData/eventId.csv"), row.names = FALSE) 
