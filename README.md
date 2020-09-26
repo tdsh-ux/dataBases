@@ -9,6 +9,7 @@ A partir da base de dados, a organização do repositório é a seguinte: em [da
 <figure class="image"> 
  <p align = "center"> 
   <img src="https://github.com/tdsh-ux/dataBases/blob/master/models/conceptualModel.jpeg">
+     </p> 
     <figcaption style="text-align:center">Figura 1: Modelo Conceitual</figcaption> 
-   </p> 
+
 </figure>
