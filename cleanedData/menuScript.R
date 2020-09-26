@@ -219,7 +219,8 @@ normalizeTable <- function(dataframe, field) {
 } 
 
 menuItemG <- menuItem %>% 
-	filter(dish_id %in% dishG[["id"]]) %>% 
+	filter(dish_id %in% dishG[["id"]], 
+	       menu_page_id %in% menuPageG[["id"]]) %>% 
 	select(menu_page_id, dish_id, price) 
 
 write.csv(menuItemG, file = paste0(getwd(), "/modelData/menuItemG.csv"), row.names = FALSE) 
@@ -228,7 +229,7 @@ write.csv(menuItemG, file = paste0(getwd(), "/modelData/menuItemG.csv"), row.nam
 menuPageG <- menuPage %>% 
 	filter(menu_id %in% menuG[["id"]], 
 	       id %in% menuItemG[["menu_page_id"]]) %>% 
-	select(menu_id, page_number, full_height, full_width) 
+	select(id, menu_id, page_number, full_height, full_width) 
 
 
 write.csv(menuPageG, file = paste0(getwd(), "/modelData/menuPageG.csv"), row.names = FALSE) 
