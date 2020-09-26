@@ -4445,4 +4445,3 @@ INSERT INTO menu (id,name,event_date,venue_id,event_id,sponsor_id,currency_id) V
 INSERT INTO menu (id,name,event_date,venue_id,event_id,sponsor_id,currency_id) VALUES (35512,"WHITES","1913-09-24",5,14,1608,2)
 INSERT INTO menu (id,name,event_date,venue_id,event_id,sponsor_id,currency_id) VALUES (35513,"RIGGS'","1913-09-24",5,14,1609,2)
 INSERT INTO menu (id,name,event_date,venue_id,event_id,sponsor_id,currency_id) VALUES (35518,"HOTEL SCHYNIGE PLATTE UND HOTEL BELLEVUE","1913-09-24",5,14,1628,12)
-INSERT INTO menu (id,name,event_date,venue_id,event_id,sponsor_id,currency_id) VALUES ()

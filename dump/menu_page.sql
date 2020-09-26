@@ -5249,4 +5249,3 @@ INSERT INTO menu_page (id,menu_id,page_number,full_height,full_width) VALUES (77
 INSERT INTO menu_page (id,menu_id,page_number,full_height,full_width) VALUES (77365,35513,4.0,5039,3165)
 INSERT INTO menu_page (id,menu_id,page_number,full_height,full_width) VALUES (77372,35518,2.0,4685,2702)
 INSERT INTO menu_page (id,menu_id,page_number,full_height,full_width) VALUES (77373,35518,3.0,4685,2702)
-INSERT INTO menu_page (id,menu_id,page_number,full_height,full_width) VALUES ()
