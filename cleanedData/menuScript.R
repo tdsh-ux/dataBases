@@ -37,8 +37,8 @@ menuTable <- menuTable %>%
 	mutate(venue = gsub(venue, pattern = "HOTEL.*", 
 			    replacement = "HOTEL")) %>% 
 	mutate(venue = gsub(x = venue, pattern = "\\[?\\?\\]?", 
-			    replacement = "NULL")) %>% 
-	mutate(venue = gsub(x = venue, pattern = "^$", replacement = "NULL")) 
+			    replacement = NA)) %>% 
+	mutate(venue = gsub(x = venue, pattern = "^$", replacement = NA)) 
 
 unique(menuTable[["venue"]]) 
 
@@ -56,11 +56,11 @@ menuEvent <- menuEvent %>%
 	mutate(event = gsub(x = event, pattern = "(.*MEETING.*)|(.*SYMPOSIUM.*)|(.*CELEBRATION.*)|(*.RECEPTION.*)", 
 			    replacement = "MEETING")) %>% 
 	mutate(event = gsub(x = event, pattern = "^$", 
-			       replacement = "NULL")) %>% 
+			       replacement = NA)) %>% 
 	mutate(event = gsub(x = event, pattern = "\\?", 
 			    replacement = "")) %>% 
 	mutate(event = gsub(x = event, pattern = "^\\[?\\?\\]?$", 
-			       replacement = "NULL")) %>% 
+			       replacement = NA)) %>% 
 	mutate(event = gsub(x = event, pattern = "\\[|\\]|\\(|\\)|([\\])|;", 
 			       replacement = "")) %>% 
 	mutate(event = gsub(x = event, pattern = "\"|\""  , 
@@ -94,7 +94,7 @@ menuO <- menuO %>%
 	mutate(occasion = gsub(x = occasion, pattern = "\\(?[O0]T?HE.*", 
 			       replacement = "OTHER")) %>% 
 	mutate(occasion = gsub(x = occasion, pattern = "^$|.*\\?.*", 
-			       replacement = "NULL")) 
+			       replacement = NA)) 
 
 
 unique(menuO[["occasion"]]) 
@@ -137,7 +137,7 @@ menuP <- menuP %>%
 	mutate(place = map(place, ~cleanData(.x, "[^,] VA", ", VA"))) %>% 
 	mutate(place = map(place, ~cleanData(.x, "[^,] IL", ", IL"))) %>% 
 	mutate(place = map(place, ~cleanData(.x, "[^,] PA", ", PA"))) %>% 
-	mutate(place = map(place, ~cleanData(.x, ".*EN ROUTE.*", "NULL"))) 
+	mutate(place = map(place, ~cleanData(.x, ".*EN ROUTE.*", NA))) 
 
 
 unique(menuP[["place"]]) 
@@ -154,7 +154,7 @@ menuS <- menuS %>%
 	mutate(sponsor = map(sponsor, ~cleanData(.x, "AMERICA[LN]", "AMERICAN"))) %>% 
 	mutate(sponsor = map(sponsor, ~cleanData(.x, "^\\(|\\)$|\\(\\?\\)|\\?|;|\\[|\\]", ""))) %>% 
 	mutate(sponsor = map(sponsor, ~cleanData(.x, "RESTAURANT NAME AND/OR LOCATION NOT GIVEN", ""))) %>% 
-	mutate(sponsor = map(sponsor, ~cleanData(.x, "^$", "NULL"))) %>% 
+	mutate(sponsor = map(sponsor, ~cleanData(.x, "^$", NA))) %>% 
 	mutate(sponsor = map(sponsor, ~cleanData(.x, "\"|\"", ""))) 
 menuS[["sponsor"]] <- unlist(menuS[["sponsor"]]) 
 
@@ -172,11 +172,11 @@ menuN <- menuS
 menuN <- menuN %>% 
 	mutate(name = toupper(name)) %>% 
 	mutate(name = gsub(x = name, pattern = "^$", 
-			   replacement = "NULL")) %>% 
+			   replacement = NA)) %>% 
 	mutate(name = gsub(x = name, pattern = "\\[|\\]", 
 			   replacement = "")) %>% 
 	mutate(name = gsub(x = name, pattern = "RESTAURANT NAME AND/OR LOCATION NOT GIVEN", 
-			   replacement = "NULL")) %>% 
+			   replacement = NA)) %>% 
 	mutate(name = gsub(x = name, pattern = "\"|\"", 
 			   replacement = "")) 
 
@@ -217,14 +217,30 @@ normalizeTable <- function(dataframe, field) {
 	
 } 
 
-venueId <- normalizeTable(menuClean, "venue") %>% rename(venueId = id) 
-eventId <- normalizeTable(menuClean, "event") %>% rename(eventId = id)  
-sponsorId <- normalizeTable(menuClean, "sponsor") %>% rename(sponsorId = id) 
-currencyId <- normalizeTable(menuClean, "currency") %>% rename(currencyId = id) 
-dateId <- normalizeTable(menuClean, "date") %>% rename(dateId = id) %>% arrange(field) 
+menuItemG <- menuItem %>% 
+	filter(dish_id %in% dishG[["id"]]) %>% 
+	select(menu_page_id, dish_id, price) 
+
+write.table(menuItemG, file = paste0(getwd(), "/modelData/menuItemG.csv"), row.names = FALSE) 
 
 
-menuClean <- menuClean %>% 
+menuPageG <- menuPage %>% 
+	filter(id %in% menuItemG[["menu_page_id"]]) %>% 
+	select(menu_id, page_number, full_height, full_width) 
+
+
+write.table(menuPageG, file = paste0(getwd(), "/modelData/menuPageG.csv"), row.names = FALSE) 
+
+menuG <- menuClean %>% 
+	filter(id %in% menuPageG[["menu_id"]]) 
+
+venueId <- normalizeTable(menuG, "venue") %>% rename(venueId = id) 
+eventId <- normalizeTable(menuG, "event") %>% rename(eventId = id)  
+sponsorId <- normalizeTable(menuG, "sponsor") %>% rename(sponsorId = id) 
+currencyId <- normalizeTable(menuG, "currency") %>% rename(currencyId = id) 
+
+
+menuG <- menuG %>% 
 	inner_join(venueId, by = c("venue" = "field")) %>% 
 	inner_join(eventId, by = c("event" = "field")) %>% 
 	inner_join(sponsorId, by = c("sponsor" = "field")) %>% 
@@ -234,10 +250,19 @@ menuClean <- menuClean %>%
 
 
 
+write.table(x = menuG, file = paste0(getwd(), "/modelData/menuG.csv"), row.names = FALSE) 
+write.table(x = venueId, file = paste0(getwd(), "/modelData/venueId.csv"), row.names = FALSE) 
+write.table(x = eventId, file = paste0(getwd(), "/modelData/eventId.csv"), row.names = FALSE) 
+write.table(x = sponsorId, file = paste0(getwd(), "/modelData/sponsorId.csv"), row.names = FALSE) 
+write.table(x = currencyId, file = paste0(getwd(), "/modelData/currencyId.csv"), row.names = FALSE) 
+write.table(x = dateId, file = paste0(getwd(), "/modelData/date.csv"), row.names = FALSE) 
 
-write.table(x = menuClean, file = paste0(getwd(), "/cleanedData/menuClean.csv"), row.names = FALSE) 
-write.table(x = venueId, file = paste0(getwd(), "/cleanedData/venueId.csv"), row.names = FALSE) 
-write.table(x = eventId, file = paste0(getwd(), "/cleanedData/eventId.csv"), row.names = FALSE) 
-write.table(x = sponsorId, file = paste0(getwd(), "/cleanedData/sponsorId.csv"), row.names = FALSE) 
-write.table(x = currencyId, file = paste0(getwd(), "/cleanedData/currencyId.csv"), row.names = FALSE) 
-write.table(x = dateId, file = paste0(getwd(), "/cleanedData/date.csv"), row.names = FALSE) 
+
+
+
+
+
+
+
+
+

@@ -6,7 +6,7 @@ dishClean <- dish %>%
 		NA, 
 		last_appeared 
 	), 
-	first_appeared = ifelse(
+	first_appeared = ifelse( 
 		first_appeared %in% c(2928, 0, 1), 
 		NA, 
 		first_appeared 
@@ -16,7 +16,6 @@ dishClean <- dish %>%
 		NA, 
 		times_appeared 
 	)) %>% 
-	select(!description) %>% 
 	mutate(name = gsub(x = name, pattern = "\\[|\\]|^[\\* ]*|^\\(\\)$|[\\* ]*$|\\?", 
 			   replacement = "")) %>% 
 	mutate(name = gsub(x = name, pattern = "\"|\"", 
@@ -55,3 +54,17 @@ cleanDish <- dishClean %>%
 
 
 write.table(cleanDish, file = paste0(getwd(), "/cleanedData/dishClean.csv"), row.names = FALSE) 
+
+
+
+
+
+
+
+dishG <- dishClean %>% 
+	filter(nchar(name) <= 15, nchar(name) >= 13) %>% 
+	mutate(name = gsub(x = name, pattern = "^$", 
+			   replacement = NA)) %>% 
+	select(id, name) 
+
+write.table(dishG, file = paste0(getwd(), "/modelData/dishG.csv"), row.names = FALSE)
