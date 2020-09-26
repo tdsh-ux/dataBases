@@ -250,12 +250,12 @@ menuG <- menuG %>%
 
 
 
-write.table(x = menuG, file = paste0(getwd(), "/modelData/menuG.csv"), row.names = FALSE) 
-write.table(x = venueId, file = paste0(getwd(), "/modelData/venueId.csv"), row.names = FALSE) 
-write.table(x = eventId, file = paste0(getwd(), "/modelData/eventId.csv"), row.names = FALSE) 
-write.table(x = sponsorId, file = paste0(getwd(), "/modelData/sponsorId.csv"), row.names = FALSE) 
-write.table(x = currencyId, file = paste0(getwd(), "/modelData/currencyId.csv"), row.names = FALSE) 
-write.table(x = dateId, file = paste0(getwd(), "/modelData/date.csv"), row.names = FALSE) 
+write.csv(x = menuG, file = paste0(getwd(), "/modelData/menuG.csv"), row.names = FALSE) 
+write.csv(x = venueId, file = paste0(getwd(), "/modelData/venueId.csv"), row.names = FALSE) 
+write.csv(x = eventId, file = paste0(getwd(), "/modelData/eventId.csv"), row.names = FALSE) 
+write.csv(x = sponsorId, file = paste0(getwd(), "/modelData/sponsorId.csv"), row.names = FALSE) 
+write.csv(x = currencyId, file = paste0(getwd(), "/modelData/currencyId.csv"), row.names = FALSE) 
+
 
 
 

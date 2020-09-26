@@ -67,4 +67,4 @@ dishG <- dishClean %>%
 			   replacement = NA)) %>% 
 	select(id, name) 
 
-write.table(dishG, file = paste0(getwd(), "/modelData/dishG.csv"), row.names = FALSE)
+write.csv(dishG, file = paste0(getwd(), "/modelData/dishG.csv"), row.names = FALSE)
