@@ -23,4 +23,4 @@ A partir da base de dados, a organização do repositório é a seguinte: em [da
     <em>Figura 3: Modelo Físico.</em> 
  </p> 
 
-</figure>
+</figure> 
