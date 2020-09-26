@@ -222,15 +222,16 @@ menuItemG <- menuItem %>%
 	filter(dish_id %in% dishG[["id"]]) %>% 
 	select(menu_page_id, dish_id, price) 
 
-write.table(menuItemG, file = paste0(getwd(), "/modelData/menuItemG.csv"), row.names = FALSE) 
+write.csv(menuItemG, file = paste0(getwd(), "/modelData/menuItemG.csv"), row.names = FALSE) 
 
 
 menuPageG <- menuPage %>% 
-	filter(id %in% menuItemG[["menu_page_id"]]) %>% 
+	filter(menu_id %in% menuG[["id"]], 
+	       id %in% menuItemG[["menu_page_id"]]) %>% 
 	select(menu_id, page_number, full_height, full_width) 
 
 
-write.table(menuPageG, file = paste0(getwd(), "/modelData/menuPageG.csv"), row.names = FALSE) 
+write.csv(menuPageG, file = paste0(getwd(), "/modelData/menuPageG.csv"), row.names = FALSE) 
 
 menuG <- menuClean %>% 
 	filter(id %in% menuPageG[["menu_id"]]) 
@@ -247,8 +248,13 @@ menuG <- menuG %>%
 	inner_join(eventId, by = c("event" = "venue")) %>% 
 	inner_join(sponsorId, by = c("sponsor" = "name")) %>% 
 	inner_join(currencyId, by = c("currency" = "name")) %>% 
-	select(!c(venue, event, sponsor, currency))  
+	rename(event_date = date) %>% 
+	select(!c(venue, event, sponsor, currency, currency_symbol, dish_count, page_count))    
 
+venueId <- venueId %>% rename(id = venue_id) 
+eventId <- eventId %>% rename(id= event_id) 
+sponsorId <- sponsorId %>% rename(id = sponsor_id) 
+currencyId <- currencyId %>% rename(id = currency_id)  
 
 
 write.csv(x = menuG, file = paste0(getwd(), "/modelData/menuG.csv"), row.names = FALSE) 
