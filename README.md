@@ -1,3 +1,3 @@
 # dataBases 
-Repository for the discipline of data bases. 
-Models and scripts.
+Repository for the databases course.  
+Models and scripts. 
