@@ -1,7 +1,7 @@
 # Disciplina: Base de Dados
 Repositório com os arquivos para a avaliação continuada da disciplina Base de Dados, ministrada remotamente na Escola de Matemática Aplicada (EMAp) pelo professor Renato Souza. 
 
-A avaliação é dividida em duas partes. Em um momento inicial, tínhamos de mapear um conjunto de dados e realizar sua modelagem, gerando, enfim, um dump em formato SQL. Nesse sentido, escolhemos os dados do projeto [What's on the menu?](https://data.world/data-society/discover-the-menu), em que foram catalogados os menus de restaurantes ocidentais de 1850 a 2015. 
+A avaliação é dividida em duas partes. Em um momento inicial, tínhamos de mapear um conjunto de dados e realizar sua modelagem, gerando, enfim, um dump em formato SQL. Nesse sentido, escolhemos os dados do projeto [What's on the menu?](https://data.world/data-society/discover-the-menu), em que foram catalogados os menus de restaurantes ocidentais de 1850 a 2015. Os modelos conceitual, lógico (que foi construído com o [Vertabelo](https://www.vertabelo.com/)) e físico (construído no [workbench do MySQL](https://dev.mysql.com/downloads/workbench/)) estão nas Figuras 1, 2 e 3, respectivamente; alternativamente, estão na pasta [models](https://github.com/tdsh-ux/dataBases/tree/master/models).  
 
 
 A partir da base de dados, a organização do repositório é a seguinte: em [data](https://github.com/tdsh-ux/dataBases/tree/master/data), estão as bases de dados brutas (para o push, foi utilizado o [Git Large File Storage](https://git-lfs.github.com/)). Em [RScriptsCleaning](https://github.com/tdsh-ux/dataBases/tree/master/RScriptsCleaning), estão os scripts em R para [download](https://github.com/tdsh-ux/dataBases/blob/master/RScriptsCleaning/dishScript.R) e [limpeza](https://github.com/tdsh-ux/dataBases/blob/master/RScriptsCleaning/menuScript.R) dos dados. As tabelas preparadas, então, estão em [modelData](https://github.com/tdsh-ux/dataBases/tree/master/modelData). Em seguida, foi utilizado, conforme está em [PythonScriptsToSQL](https://github.com/tdsh-ux/dataBases/tree/master/PythonScriptsToSQL), um [notebook](https://github.com/tdsh-ux/dataBases/blob/master/PythonScriptsToSQL/dumpScript.ipynb) de Python para inserir os dados na base de dados MySQL e gerar o dump em formato SQL. Este, enfim, foi inserido em [dump](https://github.com/tdsh-ux/dataBases/blob/master/PythonScriptsToSQL/dumpScript.ipynb). 
@@ -15,12 +15,12 @@ A partir da base de dados, a organização do repositório é a seguinte: em [da
   <p align = "center"> 
   <img src="https://github.com/tdsh-ux/dataBases/blob/master/models/logicModel.jpeg">
   <br>
-    <em>Figura 1: Modelo Lógico.</em> 
+    <em>Figura 2: Modelo Lógico.</em> 
  </p> 
   <p align = "center"> 
   <img src="https://github.com/tdsh-ux/dataBases/blob/master/models/physicalModel.jpeg">
   <br>
-    <em>Figura 1: Modelo Físico.</em> 
+    <em>Figura 3: Modelo Físico.</em> 
  </p> 
 
 </figure>
