@@ -1,4 +1,18 @@
 # Disciplina: Base de Dados
+<style>
+ figure {
+    display: inline-block;
+    border: 1px dotted gray;
+    margin: 20px; /* adjust as needed */
+}
+figure img {
+    vertical-align: top;
+}
+figure figcaption {
+    border: 1px dotted blue;
+    text-align: center;
+}
+</style> 
 Repositório com os arquivos para a avaliação continuada da disciplina Base de Dados, ministrada remotamente na Escola de Matemática Aplicada (EMAp) pelo professor Renato Souza. 
 
 A avaliação é dividida em duas partes. Em um momento inicial, tínhamos de mapear um conjunto de dados e realizar sua modelagem, gerando, enfim, um dump em formato SQL. Nesse sentido, escolhemos os dados do projeto [What's on the menu?](https://data.world/data-society/discover-the-menu), em que foram catalogados os menus de restaurantes ocidentais de 1850 a 2015. 
@@ -8,5 +22,5 @@ A partir da base de dados, a organização do repositório é a seguinte: em [da
  
 <figure class="image">
   <img src="https://github.com/tdsh-ux/dataBases/blob/master/models/conceptualModel.jpeg">
-  <figcaption>Figura 1: Modelo Conceitual</figcaption>
+  <figcaption >Figura 1: Modelo Conceitual</figcaption>
 </figure>
