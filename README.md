@@ -6,4 +6,7 @@ A avaliação é dividida em duas partes. Em um momento inicial, tínhamos de ma
 
 A partir da base de dados, a organização do repositório é a seguinte: em [data](https://github.com/tdsh-ux/dataBases/tree/master/data), estão as bases de dados brutas (para o push, foi utilizado o [Git Large File Storage](https://git-lfs.github.com/)). Em [RScriptsCleaning](https://github.com/tdsh-ux/dataBases/tree/master/RScriptsCleaning), estão os scripts em R para [download](https://github.com/tdsh-ux/dataBases/blob/master/RScriptsCleaning/dishScript.R) e [limpeza](https://github.com/tdsh-ux/dataBases/blob/master/RScriptsCleaning/menuScript.R) dos dados. As tabelas preparadas, então, estão em [modelData](https://github.com/tdsh-ux/dataBases/tree/master/modelData). Em seguida, foi utilizado, conforme está em [PythonScriptsToSQL](https://github.com/tdsh-ux/dataBases/tree/master/PythonScriptsToSQL), um [notebook](https://github.com/tdsh-ux/dataBases/blob/master/PythonScriptsToSQL/dumpScript.ipynb) de Python para inserir os dados na base de dados MySQL e gerar o dump em formato SQL. Este, enfim, foi inserido em [dump](https://github.com/tdsh-ux/dataBases/blob/master/PythonScriptsToSQL/dumpScript.ipynb). 
  
-
+<figure class="image">
+  <img src="{{ https://github.com/tdsh-ux/dataBases/blob/master/models/conceptualModel.jpeg }}" alt="{{ include.description }}">
+  <figcaption>{{ include.description }}</figcaption>
+</figure>
