@@ -1,6 +1,7 @@
 library(tidyverse) 
 menu <- read.csv(paste0(getwd(), "/data/menu.csv")) 
-
+menuItem <- read.csv(paste0(getwd(), "/data/menuItem.csv")) 
+menuPage <- read.csv(paste0(getwd(), "/data/menuPage.csv")) 
 # venue 
 menuTable <- menu %>% select(!notes) 
 menuTable <- menuTable %>% 
@@ -190,7 +191,7 @@ menuD %>%
 	arrange(desc(n)) 
 
 menuClean <- menuD %>% 
-	select(id, name, date, event, sponsor, currency, venue, dish_count, page_count) 
+	select(id, name, date, event, sponsor, currency, venue, dish_count, page_count, currency_symbol)  
 
 
 
@@ -234,19 +235,19 @@ write.table(menuPageG, file = paste0(getwd(), "/modelData/menuPageG.csv"), row.n
 menuG <- menuClean %>% 
 	filter(id %in% menuPageG[["menu_id"]]) 
 
-venueId <- normalizeTable(menuG, "venue") %>% rename(venueId = id) 
-eventId <- normalizeTable(menuG, "event") %>% rename(eventId = id)  
-sponsorId <- normalizeTable(menuG, "sponsor") %>% rename(sponsorId = id) 
-currencyId <- normalizeTable(menuG, "currency") %>% rename(currencyId = id) 
+venueId <- normalizeTable(menuG, "venue") %>% rename(venue_id = id) %>% rename(type = field) 
+eventId <- normalizeTable(menuG, "event") %>% rename(event_id = id) %>% rename(venue = field)   
+sponsorId <- normalizeTable(menuG, "sponsor") %>% rename(sponsor_id = id) %>% rename(name = field)
+currencyId <- normalizeTable(menuG, "currency") %>% rename(currency_id = id) %>% rename(name = field) 
+	
 
 
 menuG <- menuG %>% 
-	inner_join(venueId, by = c("venue" = "field")) %>% 
-	inner_join(eventId, by = c("event" = "field")) %>% 
-	inner_join(sponsorId, by = c("sponsor" = "field")) %>% 
-	inner_join(currencyId, by = c("currency" = "field")) %>% 
-	inner_join(dateId, by = c("date" = "field")) %>% 
-	select(!c(venue, event, sponsor, currency, date)) 
+	inner_join(venueId, by = c("venue" = "type")) %>% 
+	inner_join(eventId, by = c("event" = "venue")) %>% 
+	inner_join(sponsorId, by = c("sponsor" = "name")) %>% 
+	inner_join(currencyId, by = c("currency" = "name")) %>% 
+	select(!c(venue, event, sponsor, currency))  
 
 
 

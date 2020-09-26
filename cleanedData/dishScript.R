@@ -1,3 +1,4 @@
+library(tidyverse) 
 dish <- read.csv(paste0(getwd(), "/data/dish.csv")) 
 
 dishClean <- dish %>% 
@@ -65,6 +66,6 @@ dishG <- dishClean %>%
 	filter(nchar(name) <= 15, nchar(name) >= 13) %>% 
 	mutate(name = gsub(x = name, pattern = "^$", 
 			   replacement = NA)) %>% 
-	select(id, name) 
+	select(id, name, description) 
 
 write.csv(dishG, file = paste0(getwd(), "/modelData/dishG.csv"), row.names = FALSE)
